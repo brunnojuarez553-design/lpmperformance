@@ -2147,6 +2147,232 @@ section { position: relative; overflow: hidden; }
 .ai-send:hover { background: var(--bmw-cyan); }
 
 /* ============================================================
+   UBICACIÓN Y CONTACTO
+   ============================================================ */
+#ubicacion {
+  padding: 130px 0;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+#ubicacion::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(0,85,255,0.12) 0%, transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(0,163,255,0.08) 0%, transparent 50%),
+    linear-gradient(160deg, #000000 0%, #00050f 55%, #000000 100%);
+  z-index: 0;
+}
+#ubicacion::after {
+  content: '';
+  position: absolute;
+  top: 50%; right: -10%;
+  width: 900px; height: 900px;
+  transform: translateY(-50%);
+  background-image: url('https://res.cloudinary.com/dgp7uhps3/image/upload/v1782274483/IMG_8095_glusmk_x5tvzw.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.05;
+  filter: brightness(0) invert(1);
+  z-index: 0;
+  pointer-events: none;
+}
+#ubicacion .section-wrap { position: relative; z-index: 1; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 32px;
+  margin-top: 64px;
+  align-items: stretch;
+}
+
+.contact-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+.contact-card {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 26px 28px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: var(--trans);
+  flex: 1;
+}
+.contact-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--bmw-cyan), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.contact-card:hover {
+  background: rgba(0,85,255,0.06);
+  border-color: rgba(0,163,255,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+}
+.contact-card:hover::before { opacity: 1; }
+
+.contact-card-top { display: flex; align-items: flex-start; gap: 16px; }
+.contact-card-icon {
+  width: 46px; height: 46px; flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(0,85,255,0.12);
+  border: 1px solid rgba(0,163,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+}
+.contact-card-body { flex: 1; }
+.contact-card-label {
+  font-family: var(--font-m);
+  font-size: 10px; letter-spacing: 2.5px;
+  color: var(--bmw-cyan);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.contact-card-value {
+  font-family: var(--font-d);
+  font-size: 16px; font-weight: 600;
+  color: #fff; line-height: 1.5;
+}
+.contact-card-value a { color: #fff; transition: color 0.3s; }
+.contact-card-value a:hover { color: var(--bmw-cyan); }
+
+.contact-wa-btn {
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #25D366; color: #fff;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-family: var(--font-d);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  transition: var(--trans);
+}
+.contact-wa-btn svg { width: 15px; height: 15px; fill: #fff; flex-shrink: 0; }
+.contact-wa-btn:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 16px 40px rgba(37,211,102,0.35); }
+
+.contact-hours-list { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+.contact-hours-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  font-family: var(--font-b); font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--border);
+}
+.contact-hours-row:last-child { border: none; padding-bottom: 0; }
+.contact-hours-row span:last-child { color: #fff; font-weight: 500; }
+.contact-hours-row.closed span:last-child { color: rgba(255,255,255,0.35); }
+
+.contact-map-wrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  min-height: 500px;
+  height: 100%;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+.contact-map-wrap iframe {
+  width: 100%; height: 100%; min-height: 500px;
+  border: 0; display: block;
+  filter: grayscale(0.15) brightness(0.88) contrast(1.05);
+}
+.contact-map-badge {
+  position: absolute; top: 20px; left: 20px;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 11px 16px;
+  display: flex; align-items: center; gap: 10px;
+  z-index: 2;
+  font-family: var(--font-m); font-size: 10px; letter-spacing: 2px;
+  color: rgba(255,255,255,0.75); text-transform: uppercase;
+}
+.contact-map-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--bmw-cyan);
+  animation: pulseDot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.contact-map-actions {
+  position: absolute; bottom: 18px; left: 18px; right: 18px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+  z-index: 2;
+}
+.map-btn {
+  flex: 1; min-width: 150px;
+  background: rgba(10,10,10,0.82);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #fff;
+  padding: 13px 18px;
+  border-radius: 8px;
+  font-family: var(--font-d);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: var(--trans);
+  text-align: center;
+}
+.map-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.map-btn:hover { background: var(--bmw-blue); border-color: var(--bmw-blue); transform: translateY(-2px); }
+.map-btn.wa { background: rgba(37,211,102,0.18); border-color: rgba(37,211,102,0.3); }
+.map-btn.wa:hover { background: #25D366; border-color: #25D366; }
+
+.contact-cta-band {
+  margin-top: 56px;
+  background: linear-gradient(135deg, rgba(0,85,255,0.10) 0%, rgba(0,163,255,0.04) 100%);
+  border: 1px solid rgba(0,85,255,0.25);
+  border-radius: var(--radius-lg);
+  padding: 48px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 28px;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  position: relative; overflow: hidden;
+}
+.contact-cta-band::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 0% 50%, rgba(0,163,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.contact-cta-text {
+  position: relative; z-index: 1;
+  font-family: var(--font-d);
+  font-size: clamp(20px, 2.6vw, 30px); font-weight: 700;
+  text-transform: uppercase; letter-spacing: -0.5px;
+  color: #fff; max-width: 540px; line-height: 1.2;
+}
+.contact-cta-btns { position: relative; z-index: 1; display: flex; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 24px; }
+  .contact-map-wrap { min-height: 350px; }
+  .contact-map-wrap iframe { min-height: 350px; }
+}
+@media (max-width: 700px) {
+  .contact-cta-band { padding: 32px 24px; flex-direction: column; text-align: center; }
+  .contact-cta-btns { width: 100%; }
+  .contact-cta-btns a { flex: 1; justify-content: center; }
+  .contact-map-actions { flex-direction: column; }
+  #ubicacion { padding: 80px 0; }
+}
+
+/* ============================================================
    FOOTER
    ============================================================ */
 footer {
@@ -2156,20 +2382,37 @@ footer {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 1.4fr 1fr;
   gap: 48px;
   margin-bottom: 48px;
 }
+.footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand-row img { height: 36px; width: auto; object-fit: contain; }
 .footer-brand { font-family: var(--font-d); font-size: 24px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
 .footer-brand span { color: var(--bmw-cyan); }
-.footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 280px; }
+.footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 320px; }
 .footer-heading { font-family: var(--font-d); font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .footer-links a { font-size: 14px; color: rgba(255,255,255,0.55); transition: color 0.3s; }
 .footer-links a:hover { color: var(--bmw-cyan); }
-.footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.footer-social { display: flex; gap: 12px; margin-top: 22px; }
+.footer-social a {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.6);
+  transition: var(--trans);
+}
+.footer-social a svg { width: 16px; height: 16px; fill: currentColor; }
+.footer-social a:hover { background: var(--bmw-blue); border-color: var(--bmw-blue); color: #fff; transform: translateY(-3px); }
+.footer-social a.wa:hover { background: #25D366; border-color: #25D366; }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .footer-copy { font-family: var(--font-m); font-size: 11px; color: var(--muted); letter-spacing: 1px; }
 .footer-badge { font-family: var(--font-m); font-size: 10px; color: var(--bmw-blue); letter-spacing: 2px; }
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+}
 
 /* ============================================================
    MOBILE NAV MENU
@@ -2485,10 +2728,10 @@ footer {
 <section id="hero">
   <!-- Video background — untouched -->
   <div class="hero-video-wrap">
-    <video id="heroVideo" autoplay muted loop playsinline preload="auto"
-      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;will-change:transform;">
-      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_auto/v1782274736/insta_video_50303_dtpl1f.mov" type="video/mp4">
-      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_auto,vc_h264/v1782274736/insta_video_50303_dtpl1f.mov" type="video/mp4">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto" fetchpriority="high"
+      poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_1600,q_auto,f_jpg/v1782274736/insta_video_50303_dtpl1f.jpg"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;will-change:transform;background:#000;">
+      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_mp4,vc_h264/v1782274736/insta_video_50303_dtpl1f.mp4" type="video/mp4">
     </video>
   </div>
   <div class="hero-grid"></div>
@@ -3388,36 +3631,156 @@ function enviarWA() {
 </script>
 
 <!-- ============================================================
+     UBICACIÓN Y CONTACTO
+     ============================================================ -->
+<section id="ubicacion">
+  <div class="section-wrap">
+    <div class="reveal-left">
+      <div class="section-eyebrow">Visítanos</div>
+      <h2 class="section-title">Encuéntra<span class="blue">nos</span></h2>
+      <p class="section-body">Visítanos en nuestro taller especializado BMW o contáctanos directamente para recibir asesoramiento personalizado.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <!-- Columna izquierda — tarjetas de contacto -->
+      <div class="contact-cards reveal-left reveal-delay-1">
+
+        <div class="contact-card">
+          <div class="contact-card-top">
+            <div class="contact-card-icon">📍</div>
+            <div class="contact-card-body">
+              <div class="contact-card-label">Dirección</div>
+              <div class="contact-card-value">Corregidor Zañartu 1206, Maipú<br>Región Metropolitana, Chile</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-top">
+            <div class="contact-card-icon">📱</div>
+            <div class="contact-card-body">
+              <div class="contact-card-label">WhatsApp</div>
+              <div class="contact-card-value"><a href="https://wa.me/56942600558">+56 9 4260 0558</a></div>
+              <a class="contact-wa-btn" href="https://wa.me/56942600558" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.9l6.204-1.449A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.006-1.374l-.36-.214-3.681.86.929-3.585-.235-.368A9.794 9.794 0 012.182 12C2.182 6.566 6.566 2.182 12 2.182S21.818 6.566 21.818 12 17.434 21.818 12 21.818z"/></svg>
+                Contactar por WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-top">
+            <div class="contact-card-icon">☎️</div>
+            <div class="contact-card-body">
+              <div class="contact-card-label">Teléfono</div>
+              <div class="contact-card-value"><a href="tel:+56942600558">+56 9 4260 0558</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-top">
+            <div class="contact-card-icon">✉️</div>
+            <div class="contact-card-body">
+              <div class="contact-card-label">Correo</div>
+              <div class="contact-card-value"><a href="mailto:contacto@lpmperformance.cl">contacto@lpmperformance.cl</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-top">
+            <div class="contact-card-icon">🕒</div>
+            <div class="contact-card-body" style="width:100%;">
+              <div class="contact-card-label">Horarios</div>
+              <div class="contact-hours-list">
+                <div class="contact-hours-row"><span>Lunes a Viernes</span><span>09:00 – 18:00</span></div>
+                <div class="contact-hours-row"><span>Sábado</span><span>09:00 – 14:00</span></div>
+                <div class="contact-hours-row closed"><span>Domingo</span><span>Cerrado</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Columna derecha — mapa -->
+      <div class="contact-map-wrap reveal-right reveal-delay-2">
+        <div class="contact-map-badge">
+          <span class="contact-map-badge-dot"></span>
+          LPM Performance · Maipú
+        </div>
+        <iframe
+          src="https://www.google.com/maps?q=Corregidor%20Za%C3%B1artu%201206%2C%20Maip%C3%BA%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          title="Ubicación LPM Performance — Corregidor Zañartu 1206, Maipú">
+        </iframe>
+        <div class="contact-map-actions">
+          <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=Corregidor%20Za%C3%B1artu%201206%2C%20Maip%C3%BA%2C%20Chile" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M21.71 11.29l-9-9a1 1 0 00-1.42 0l-9 9a1 1 0 000 1.42l9 9a1 1 0 001.42 0l9-9a1 1 0 000-1.42zM14 14.5V12h-4v3H8v-4a1 1 0 011-1h5V7.5l3.5 3.5z"/></svg>
+            Cómo llegar
+          </a>
+          <a class="map-btn wa" href="https://wa.me/56942600558" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.9l6.204-1.449A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.006-1.374l-.36-.214-3.681.86.929-3.585-.235-.368A9.794 9.794 0 012.182 12C2.182 6.566 6.566 2.182 12 2.182S21.818 6.566 21.818 12 17.434 21.818 12 21.818z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Banda CTA final -->
+    <div class="contact-cta-band reveal">
+      <div class="contact-cta-text">¿Listo para llevar tu BMW al siguiente nivel?</div>
+      <div class="contact-cta-btns">
+        <a href="#cta-final" class="btn-primary">Agendar Diagnóstico</a>
+        <a href="https://wa.me/56942600558" target="_blank" class="btn-ghost">Escribir por WhatsApp</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
      FOOTER
      ============================================================ -->
 <footer>
   <div class="section-wrap">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">LPM <span>PERFORMANCE</span></div>
-        <div class="footer-tagline">Especialistas exclusivos en BMW Performance. Reprogramación ECU, codificaciones y diagnóstico de nivel profesional.</div>
+        <div class="footer-brand-row">
+          <img src="https://res.cloudinary.com/dgp7uhps3/image/upload/v1782274483/IMG_8095_glusmk_x5tvzw.png" alt="LPM Performance">
+          <div class="footer-brand" style="margin-bottom:0;">LPM <span>PERFORMANCE</span></div>
+        </div>
+        <div class="footer-tagline">Especialistas BMW en Maipú, Chile.</div>
+        <div class="footer-social">
+          <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12.07C22 6.51 17.52 2 12 2S2 6.51 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.41c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z"/></svg>
+          </a>
+          <a class="wa" href="https://wa.me/56942600558" target="_blank" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.9l6.204-1.449A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.006-1.374l-.36-.214-3.681.86.929-3.585-.235-.368A9.794 9.794 0 012.182 12C2.182 6.566 6.566 2.182 12 2.182S21.818 6.566 21.818 12 17.434 21.818 12 21.818z"/></svg>
+          </a>
+        </div>
       </div>
       <div>
-        <div class="footer-heading">Servicios</div>
+        <div class="footer-heading">Navegación</div>
         <ul class="footer-links">
-          <li><a href="#servicios">Reprogramación ECU</a></li>
-          <li><a href="#servicios">Codificaciones BMW</a></li>
-          <li><a href="#servicios">Diagnóstico Avanzado</a></li>
-          <li><a href="#servicios">Accesorios OEM</a></li>
-          <li><a href="#servicios">Iluminación Premium</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-heading">Contacto</div>
-        <ul class="footer-links">
-          <li><a href="https://wa.me/56942600558">WhatsApp</a></li>
-          <li><a href="#simulador">Simulador de Potencia</a></li>
-          <li><a href="#proyectos">Ver Proyectos</a></li>
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#ubicacion">Contacto</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2024 LPM PERFORMANCE · Todos los derechos reservados</div>
+      <div class="footer-copy">© 2026 LPM Performance. Todos los derechos reservados.</div>
       <div class="footer-badge">ESPECIALISTAS BMW</div>
     </div>
   </div>
@@ -3515,36 +3878,61 @@ function enviarWA() {
 
 <script>
 /* ============================================================
-   LOADER
+   HERO VIDEO — reproducción instantánea y robusta
    ============================================================ */
-// Force hero video to play ASAP — before DOM fully loaded
-(function() {
-  document.addEventListener('DOMContentLoaded', function() {
-    const v = document.getElementById('heroVideo');
-    if (!v) return;
-    v.muted = true;
-    v.setAttribute('playsinline', '');
-    v.setAttribute('muted', '');
+function initHeroVideo() {
+  const v = document.getElementById('heroVideo');
+  if (!v) return;
+
+  v.muted = true;
+  v.defaultMuted = true;
+  v.playsInline = true;
+
+  const tryPlay = () => {
     const p = v.play();
     if (p && p.catch) p.catch(() => {});
+  };
+
+  // Intento inmediato, no espera a que cargue nada más
+  tryPlay();
+
+  // Reintenta en cuanto el navegador tenga datos suficientes
+  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach(evt => {
+    v.addEventListener(evt, tryPlay);
   });
-})();
 
-window.addEventListener('load', () => {
-  // Re-attempt play after full load (some mobile browsers need this)
-  const v = document.getElementById('heroVideo');
-  if (v && v.paused) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(()=>{}); }
+  // Algunos navegadores móviles bloquean el autoplay hasta el primer
+  // gesto del usuario — lo destrabamos ahí también
+  const resumeOnInteraction = () => { if (v.paused) tryPlay(); };
+  window.addEventListener('touchstart', resumeOnInteraction, { once: true, passive: true });
+  window.addEventListener('click', resumeOnInteraction, { once: true });
 
-  const bar = document.getElementById('loaderBar');
-  const arc = document.querySelector('.tach-arc-fill');
+  // Si se pausa solo (cambio de pestaña, throttling, etc.) lo reanudamos
+  v.addEventListener('pause', () => { if (!document.hidden) tryPlay(); });
+}
+initHeroVideo();
+
+/* ============================================================
+   LOADER — secuencia fija e independiente de la descarga de assets,
+   así siempre arranca visualmente desde cero (no depende de cuánto
+   tarde el video u otras imágenes en descargar)
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const bar    = document.getElementById('loaderBar');
+  const arc    = document.querySelector('.tach-arc-fill');
   const needle = document.querySelector('.tach-needle');
   const loader = document.getElementById('loader');
 
-  setTimeout(() => {
-    bar.style.width = '100%';
-    arc.style.strokeDashoffset = '0';
-    needle.style.transform = 'rotate(45deg)';
-  }, 200);
+  // Doble requestAnimationFrame: obliga al navegador a pintar primero
+  // el estado vacío (0%) antes de animar al 100%, evitando que la
+  // transición se salte y el tablero "aparezca ya cargado".
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bar.style.width = '100%';
+      arc.style.strokeDashoffset = '0';
+      needle.style.transform = 'rotate(45deg)';
+    });
+  });
 
   setTimeout(() => {
     loader.classList.add('fade-out');
@@ -3553,7 +3941,7 @@ window.addEventListener('load', () => {
       loader.style.display = 'none';
       triggerHeroAnimations();
     }, 700);
-  }, 2400);
+  }, 2200);
 });
 
 function triggerHeroAnimations() {
