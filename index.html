@@ -3,6 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script>
+/* Resuelve la mejor variante del video del hero ANTES de cualquier otra
+   cosa y empieza a descargarla de inmediato (prioridad máxima),
+   para que esté lista y arranque al instante cuando el navegador
+   llegue al <video>. */
+(function () {
+  var isMobile = window.innerWidth <= 768;
+  var src = isMobile
+    ? 'https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto:eco,f_mp4,vc_h264,w_960/v1782274736/insta_video_50303_dtpl1f.mp4'
+    : 'https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_mp4,vc_h264,w_1920/v1782274736/insta_video_50303_dtpl1f.mp4';
+  window.__heroVideoSrc = src;
+  var preconnect = document.createElement('link');
+  preconnect.rel = 'preconnect';
+  preconnect.href = 'https://res.cloudinary.com';
+  preconnect.crossOrigin = 'anonymous';
+  document.head.appendChild(preconnect);
+  var link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'video';
+  link.href = src;
+  link.fetchPriority = 'high';
+  document.head.appendChild(link);
+})();
+</script>
 <title>LPM Performance | Especialistas BMW | Reprogramación ECU · Codificaciones · Diagnóstico</title>
 <meta name="description" content="LPM Performance — Especialistas BMW en reprogramación ECU Stage 1, 2 y 3, codificaciones, diagnóstico avanzado y accesorios OEM. Máximo rendimiento para tu BMW.">
 <meta name="keywords" content="BMW Performance, Codificaciones BMW, Reprogramación BMW, Taller BMW especializado, BMW Stage 1, BMW Stage 2, Diagnóstico BMW, ECU BMW">
@@ -2232,7 +2256,7 @@ section { position: relative; overflow: hidden; }
   display: flex; align-items: center; justify-content: center;
   font-size: 19px;
 }
-.contact-card-body { flex: 1; }
+.contact-card-body { flex: 1; min-width: 0; width: 100%; }
 .contact-card-label {
   font-family: var(--font-m);
   font-size: 10px; letter-spacing: 2.5px;
@@ -2251,18 +2275,25 @@ section { position: relative; overflow: hidden; }
 .contact-wa-btn {
   margin-top: 16px;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
   background: #25D366; color: #fff;
-  padding: 14px 22px;
+  padding: 14px 16px;
   border-radius: 8px;
   font-family: var(--font-d);
   font-size: 12px; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase;
+  letter-spacing: 1px; text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: var(--trans);
 }
 .contact-wa-btn svg { width: 15px; height: 15px; fill: #fff; flex-shrink: 0; }
 .contact-wa-btn:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 16px 40px rgba(37,211,102,0.35); }
+@media (max-width: 360px) {
+  .contact-wa-btn { font-size: 10.5px; letter-spacing: 0.5px; padding: 13px 10px; gap: 6px; }
+}
 
 .contact-hours-list { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
 .contact-hours-row {
@@ -2422,16 +2453,16 @@ footer {
   background: rgba(0,0,0,0.97);
   backdrop-filter: blur(20px);
   z-index: 999;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
   opacity: 0; pointer-events: none;
   transition: opacity 0.4s;
 }
 #mobile-nav.open { opacity: 1; pointer-events: all; }
 .mobile-nav-link {
   font-family: var(--font-d);
-  font-size: 32px; font-weight: 700;
+  font-size: 22px; font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   color: var(--muted);
   transition: color 0.3s;
 }
@@ -2719,7 +2750,8 @@ footer {
   <a href="#simulador"   class="mobile-nav-link" onclick="closeMobileNav()">Simulador</a>
   <a href="#proyectos"   class="mobile-nav-link" onclick="closeMobileNav()">Proyectos</a>
   <a href="#testimonios" class="mobile-nav-link" onclick="closeMobileNav()">Clientes</a>
-  <a href="https://wa.me/56942600558" class="mobile-nav-link" style="color:#25D366">WhatsApp</a>
+  <a href="#ubicacion"   class="mobile-nav-link" onclick="closeMobileNav()">Contacto</a>
+  <a href="https://wa.me/56942600558" class="mobile-nav-link" style="color:#25D366" onclick="closeMobileNav()">WhatsApp</a>
 </div>
 
 <!-- ============================================================
@@ -2729,9 +2761,10 @@ footer {
   <!-- Video background — untouched -->
   <div class="hero-video-wrap">
     <video id="heroVideo" autoplay muted loop playsinline preload="auto" fetchpriority="high"
+      disablePictureInPicture disableRemotePlayback
       poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_1600,q_auto,f_jpg/v1782274736/insta_video_50303_dtpl1f.jpg"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;will-change:transform;background:#000;">
-      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_mp4,vc_h264/v1782274736/insta_video_50303_dtpl1f.mp4" type="video/mp4">
+      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_mp4,vc_h264,w_1920/v1782274736/insta_video_50303_dtpl1f.mp4" type="video/mp4">
     </video>
   </div>
   <div class="hero-grid"></div>
@@ -3758,7 +3791,7 @@ function enviarWA() {
         </div>
         <div class="footer-tagline">Especialistas BMW en Maipú, Chile.</div>
         <div class="footer-social">
-          <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+          <a href="https://instagram.com/lpmperformance" target="_blank" aria-label="Instagram @lpmperformance">
             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
           <a href="https://facebook.com" target="_blank" aria-label="Facebook">
@@ -3887,6 +3920,16 @@ function initHeroVideo() {
   v.muted = true;
   v.defaultMuted = true;
   v.playsInline = true;
+
+  // Usa la misma URL que ya se empezó a precargar en el <head>
+  // (la variante liviana si es mobile) para no pedir el archivo 2 veces
+  // y aprovechar los bytes que el navegador ya está bajando.
+  const resolvedSrc = window.__heroVideoSrc;
+  const currentSource = v.querySelector('source');
+  if (resolvedSrc && currentSource && currentSource.src !== resolvedSrc) {
+    currentSource.src = resolvedSrc;
+    v.load();
+  }
 
   const tryPlay = () => {
     const p = v.play();
