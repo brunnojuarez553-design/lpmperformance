@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>LPM Performance | Especialistas BMW | Reprogramación ECU · Codificaciones · Diagnóstico</title>
 <meta name="description" content="LPM Performance — Especialistas BMW en reprogramación ECU Stage 1, 2 y 3, codificaciones, diagnóstico avanzado y accesorios OEM. Máximo rendimiento para tu BMW.">
 <meta name="keywords" content="BMW Performance, Codificaciones BMW, Reprogramación BMW, Taller BMW especializado, BMW Stage 1, BMW Stage 2, Diagnóstico BMW, ECU BMW">
@@ -2086,10 +2086,12 @@ section { position: relative; overflow: hidden; }
   border-radius: 8px;
   padding: 10px 14px;
   color: #fff;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px prevents iOS zoom on focus */
   font-family: var(--font-b);
   outline: none;
   transition: border-color 0.3s;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
 }
 .ai-input:focus { border-color: var(--bmw-blue); }
 .ai-send {
@@ -2316,7 +2318,13 @@ footer {
 
   /* FLOATING BUTTONS */
   #floating-dock { right: 16px; bottom: 16px; gap: 10px; }
-  #ai-panel { right: 12px; left: 12px; width: auto; bottom: 80px; max-height: 70vh; }
+  #ai-panel { 
+    right: 0; left: 0; width: 100%; bottom: 0; 
+    max-height: 85vh; border-radius: 20px 20px 0 0; 
+    border-left: none; border-right: none; border-bottom: none;
+  }
+  .ai-input { font-size: 16px; } /* iOS no-zoom */
+  .ai-input-row { padding: 12px 16px env(safe-area-inset-bottom, 16px); }
 
   /* Eliminar hover transforms en touch (performance) */
   .problem-card:hover { transform: none; }
@@ -2435,9 +2443,10 @@ footer {
 <section id="hero">
   <!-- Video background — untouched -->
   <div class="hero-video-wrap">
-    <video autoplay muted loop playsinline preload="auto"
-      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
-      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782274736/insta_video_50303_dtpl1f.mov" type="video/mp4">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto"
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;will-change:transform;">
+      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_auto/v1782274736/insta_video_50303_dtpl1f.mov" type="video/mp4">
+      <source src="https://res.cloudinary.com/dgp7uhps3/video/upload/q_auto,f_auto,vc_h264/v1782274736/insta_video_50303_dtpl1f.mov" type="video/mp4">
     </video>
   </div>
   <div class="hero-grid"></div>
@@ -3264,10 +3273,12 @@ footer {
   padding:14px 16px;
   color:#fff;
   font-family:var(--font-b);
-  font-size:15px;
+  font-size:16px; /* ≥16px prevents iOS zoom */
   outline:none;
   transition:border-color .2s, background .2s;
   box-sizing:border-box;
+  touch-action:manipulation;
+  -webkit-text-size-adjust:100%;
 }
 .cta-input::placeholder { color:rgba(255,255,255,.25); }
 .cta-input:focus {
@@ -3443,7 +3454,24 @@ function enviarWA() {
 /* ============================================================
    LOADER
    ============================================================ */
+// Force hero video to play ASAP — before DOM fully loaded
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    const v = document.getElementById('heroVideo');
+    if (!v) return;
+    v.muted = true;
+    v.setAttribute('playsinline', '');
+    v.setAttribute('muted', '');
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  });
+})();
+
 window.addEventListener('load', () => {
+  // Re-attempt play after full load (some mobile browsers need this)
+  const v = document.getElementById('heroVideo');
+  if (v && v.paused) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(()=>{}); }
+
   const bar = document.getElementById('loaderBar');
   const arc = document.querySelector('.tach-arc-fill');
   const needle = document.querySelector('.tach-needle');
