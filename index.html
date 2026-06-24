@@ -506,16 +506,43 @@ nav.scrolled {
 
 /* MOBILE HERO */
 @media (max-width: 768px) {
-  .hero-metric { padding: 14px 16px; }
+  /* Hero: auto height to prevent content/metrics overlap */
+  #hero {
+    height: auto;
+    min-height: 100svh;
+    padding-bottom: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .hero-content {
+    padding-top: max(90px, env(safe-area-inset-top, 90px));
+    padding-bottom: 32px;
+  }
+  /* Metrics: pull out of absolute, flow below content */
+  .hero-metrics {
+    position: static;
+    transform: none;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: 1px;
+    margin-top: auto;
+    opacity: 1 !important; /* always visible, no transition needed */
+  }
+  .hero-metric { padding: 14px 16px; flex: 1 1 45%; }
   .hero-metric-value { font-size: 20px; }
-  .hero-metrics { flex-wrap: wrap; gap: 1px; padding-bottom: 24px; }
-  .hero-metric { flex: 1 1 45%; }
-  .hero-metric:first-child { border-radius: 4px 0 0 0; }
-  .hero-metric:nth-child(2) { border-radius: 0 4px 0 0; }
-  .hero-metric:nth-child(3) { border-left: none; border-radius: 0 0 0 4px; }
-  .hero-metric:last-child   { border-radius: 0 0 4px 0; }
+  .hero-metric:first-child { border-radius: 0; border-left: none; }
+  .hero-metric:nth-child(2) { border-radius: 0; }
+  .hero-metric:nth-child(3) { border-left: none; border-radius: 0; }
+  .hero-metric:last-child   { border-radius: 0; }
   .hero-scroll { display: none; }
   .hero-badge-text { font-size: 8px; letter-spacing: 2px; }
+  /* Hero buttons: full width stacked */
+  .hero-btns { flex-direction: column; gap: 10px; width: 100%; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
 }
 
 /* ============================================================
@@ -1428,10 +1455,25 @@ section { position: relative; overflow: hidden; }
 
 /* Mobile */
 @media (max-width: 600px) {
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card { aspect-ratio: 9/16; }
+  .projects-grid { grid-template-columns: repeat(2, 1fr); gap: 2px; }
+  .project-card { aspect-ratio: 9/16; cursor: pointer; }
   .project-tag, .project-model { opacity: 1; transform: none; }
-  .project-play { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  /* Play button always visible on touch */
+  .project-play {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    width: 52px; height: 52px;
+    background: rgba(0,85,255,0.55);
+    border-color: rgba(255,255,255,0.5);
+  }
+}
+@media (hover: none) {
+  /* Touch devices: show play button always */
+  .project-play {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+  .project-tag, .project-model { opacity: 1 !important; transform: none !important; }
 }
 
 /* ============================================================
@@ -2969,13 +3011,25 @@ footer {
       <h2 class="section-title">Trabajos<br><span class="blue">Destacados</span></h2>
       <p class="section-body">Cada proyecto es único. Cada mapa es escrito desde cero para el motor, condición y uso del cliente.</p>
     </div>
+    <!-- Video Lightbox -->
+    <div id="videoLightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.97);align-items:center;justify-content:center;">
+      <button onclick="closeLightbox()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:50%;width:44px;height:44px;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;backdrop-filter:blur(8px);">✕</button>
+      <video id="lightboxVideo" playsinline controls
+        style="max-width:100vw;max-height:90vh;width:100%;object-fit:contain;outline:none;"
+        onclick="event.stopPropagation()">
+      </video>
+    </div>
+
     <div class="projects-grid">
 
       <!-- Video 1 -->
       <div class="project-card reveal-left reveal-delay-1"
-           onmouseenter="this.querySelector('video').play()"
-           onmouseleave="this.querySelector('video').pause()">
-        <video class="project-video" src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273503/insta_video_38799_ycxywj.mp4"
+           onmouseenter="projectHoverPlay(this)"
+           onmouseleave="projectHoverPause(this)"
+           onclick="openLightbox(this)">
+        <video class="project-video" 
+          src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273503/insta_video_38799_ycxywj.mp4"
+          poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_600,q_auto,f_jpg/v1782273503/insta_video_38799_ycxywj.jpg"
           muted loop playsinline preload="metadata"></video>
         <div class="project-overlay">
           <div class="project-info">
@@ -2990,9 +3044,12 @@ footer {
 
       <!-- Video 2 -->
       <div class="project-card reveal-right reveal-delay-2"
-           onmouseenter="this.querySelector('video').play()"
-           onmouseleave="this.querySelector('video').pause()">
-        <video class="project-video" src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273489/insta_video_31857_vubotv.mp4"
+           onmouseenter="projectHoverPlay(this)"
+           onmouseleave="projectHoverPause(this)"
+           onclick="openLightbox(this)">
+        <video class="project-video"
+          src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273489/insta_video_31857_vubotv.mp4"
+          poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_600,q_auto,f_jpg/v1782273489/insta_video_31857_vubotv.jpg"
           muted loop playsinline preload="metadata"></video>
         <div class="project-overlay">
           <div class="project-info">
@@ -3007,9 +3064,12 @@ footer {
 
       <!-- Video 3 -->
       <div class="project-card reveal-left reveal-delay-3"
-           onmouseenter="this.querySelector('video').play()"
-           onmouseleave="this.querySelector('video').pause()">
-        <video class="project-video" src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273482/insta_video_18719_mmbkqx.mp4"
+           onmouseenter="projectHoverPlay(this)"
+           onmouseleave="projectHoverPause(this)"
+           onclick="openLightbox(this)">
+        <video class="project-video"
+          src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273482/insta_video_18719_mmbkqx.mp4"
+          poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_600,q_auto,f_jpg/v1782273482/insta_video_18719_mmbkqx.jpg"
           muted loop playsinline preload="metadata"></video>
         <div class="project-overlay">
           <div class="project-info">
@@ -3024,9 +3084,12 @@ footer {
 
       <!-- Video 4 -->
       <div class="project-card reveal-left reveal-delay-1"
-           onmouseenter="this.querySelector('video').play()"
-           onmouseleave="this.querySelector('video').pause()">
-        <video class="project-video" src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273482/insta_video_50929_pgigqc.mp4"
+           onmouseenter="projectHoverPlay(this)"
+           onmouseleave="projectHoverPause(this)"
+           onclick="openLightbox(this)">
+        <video class="project-video"
+          src="https://res.cloudinary.com/dgp7uhps3/video/upload/v1782273482/insta_video_50929_pgigqc.mp4"
+          poster="https://res.cloudinary.com/dgp7uhps3/video/upload/so_0,w_600,q_auto,f_jpg/v1782273482/insta_video_50929_pgigqc.jpg"
           muted loop playsinline preload="metadata"></video>
         <div class="project-overlay">
           <div class="project-info">
@@ -3706,10 +3769,9 @@ function animNum(id, target) {
    AI CONCIERGE — GROQ LLM (API key oculta en Vercel)
    ============================================================ */
 
-// Historial de mensajes para contexto
 const chatHistory = [];
 
-// Estado del lead (para generar el mensaje de WhatsApp)
+// Lead acumulado — se actualiza con cada respuesta del servidor
 const lead = {
   nombre: '', modelo: '', año: '', motor: '',
   combustible: '', servicio: '', necesidad: '',
@@ -3717,11 +3779,11 @@ const lead = {
 };
 
 let isBotTyping = false;
+let waShown = false; // solo mostramos el botón una vez
 
 function toggleAI() {
   const panel = document.getElementById('ai-panel');
   panel.classList.toggle('open');
-  // Saludo inicial solo la primera vez
   if (panel.classList.contains('open') && chatHistory.length === 0) {
     setTimeout(() => sendFirstGreeting(), 400);
   }
@@ -3729,11 +3791,8 @@ function toggleAI() {
 
 function addMsg(text, role) {
   const wrap = document.getElementById('aiMessages');
-  // Quita el mensaje de bienvenida estático si existe
   const staticWelcome = wrap.querySelector('.ai-msg.bot');
-  if (staticWelcome && chatHistory.length === 0 && role === 'bot') {
-    staticWelcome.remove();
-  }
+  if (staticWelcome && chatHistory.length === 0 && role === 'bot') staticWelcome.remove();
   const div = document.createElement('div');
   div.className = 'ai-msg ' + role;
   div.innerHTML = text.replace(/\n/g, '<br>');
@@ -3743,11 +3802,11 @@ function addMsg(text, role) {
 
 function showTyping() {
   const wrap = document.getElementById('aiMessages');
-  const typing = document.createElement('div');
-  typing.className = 'ai-msg bot ai-typing-indicator';
-  typing.id = 'typingBubble';
-  typing.innerHTML = '<span></span><span></span><span></span>';
-  wrap.appendChild(typing);
+  const t = document.createElement('div');
+  t.className = 'ai-msg bot ai-typing-indicator';
+  t.id = 'typingBubble';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  wrap.appendChild(t);
   wrap.scrollTop = wrap.scrollHeight;
 }
 
@@ -3756,89 +3815,63 @@ function removeTyping() {
   if (t) t.remove();
 }
 
-function extractLeadData(text) {
-  // Extracción heurística básica del texto del usuario
-  const t = text.toLowerCase();
-  // Nombre
-  const nameMatch = text.match(/(?:soy|me llamo|mi nombre es)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?)/i);
-  if (nameMatch && !lead.nombre) lead.nombre = nameMatch[1];
-  // Año
-  const yearMatch = text.match(/\b(19[89]\d|20[012]\d)\b/);
-  if (yearMatch && !lead.año) lead.año = yearMatch[1];
-  // Servicio detectado
-  if (!lead.servicio) {
-    if (/stage|repro|ecu|mapeo|potencia|torque|pops|bang/i.test(t)) lead.servicio = 'Reprogramación ECU';
-    else if (/carplay|android auto|multimedia/i.test(t)) lead.servicio = 'Apple CarPlay / Multimedia';
-    else if (/codif|activar|funcion|fold mirror/i.test(t)) lead.servicio = 'Codificaciones BMW';
-    else if (/falla|ruido|check|diagno/i.test(t)) lead.servicio = 'Diagnóstico';
-    else if (/body kit|spoiler|difusor|lip|estetica|look/i.test(t)) lead.servicio = 'Estética / Carrocería';
-    else if (/angel eyes|led|luces|optica/i.test(t)) lead.servicio = 'Iluminación';
-    else if (/mantenci|aceite|filtro|service/i.test(t)) lead.servicio = 'Mantención';
-  }
-  // Modelo BMW simple
-  const modelMatch = text.match(/\b(m2|m3|m4|m5|m8|m135i|m240i|m340i|m440i|m550i|m850i|320i|330i|328i|335i|118i|120i|218i|220i|230i|318i|420i|430i|520i|530i|540i|x1|x2|x3|x4|x5|x6|x7|z4|i4|i5|i7)\b/i);
-  if (modelMatch && !lead.modelo) lead.modelo = modelMatch[1].toUpperCase();
+function mergeLead(incoming) {
+  // Merge incoming (from server) into local lead, never overwrite with empty
+  if (!incoming) return;
+  Object.keys(lead).forEach(k => {
+    if (incoming[k] && incoming[k].trim && incoming[k].trim() !== '') {
+      lead[k] = incoming[k].trim();
+    }
+  });
 }
 
 function buildWhatsAppMsg() {
   const isRepro = /reprogramaci|ecu|stage/i.test(lead.servicio);
-  let msg = `Hola LPM Performance 👋\n\n`;
-  if (lead.nombre) msg += `Mi nombre es ${lead.nombre}.\n\n`;
+  let msg = 'Hola LPM Performance 👋\n\n';
+  if (lead.nombre) msg += 'Mi nombre es ' + lead.nombre + '.\n\n';
   if (lead.modelo || lead.año) {
-    msg += `🚗 *Vehículo:* BMW ${lead.modelo} ${lead.año}\n`.trim() + '\n';
-    if (lead.motor) msg += `• Motor: ${lead.motor}\n`;
-    if (lead.combustible) msg += `• Combustible: ${lead.combustible}\n`;
+    msg += '🚗 *Vehículo:* BMW ' + [lead.modelo, lead.año].filter(Boolean).join(' ') + '\n';
+    if (lead.motor)      msg += '• Motor: '       + lead.motor      + '\n';
+    if (lead.combustible) msg += '• Combustible: ' + lead.combustible + '\n';
   }
-  if (lead.servicio) msg += `\n🔧 *Servicio:* ${lead.servicio}\n`;
+  if (lead.servicio) msg += '\n🔧 *Servicio:* ' + lead.servicio + '\n';
   if (isRepro) {
-    if (lead.modificaciones) msg += `\n⚙️ *Modificaciones actuales:* ${lead.modificaciones}\n`;
-    if (lead.objetivo) msg += `🎯 *Objetivo:* ${lead.objetivo}\n`;
+    if (lead.modificaciones) msg += '\n⚙️ *Modificaciones:* ' + lead.modificaciones + '\n';
+    if (lead.objetivo)       msg += '🎯 *Objetivo:* '          + lead.objetivo       + '\n';
   }
-  if (lead.necesidad) msg += `\n💬 *Detalle:* ${lead.necesidad}\n`;
-  if (lead.ubicacion) msg += `📍 *Ubicación:* ${lead.ubicacion}\n`;
-  msg += `\nMe gustaría coordinar una evaluación. ¡Gracias!`;
+  if (lead.necesidad) msg += '\n💬 *Detalle:* ' + lead.necesidad + '\n';
+  if (lead.ubicacion) msg += '📍 *Ubicación:* ' + lead.ubicacion + '\n';
+  msg += '\nMe gustaría coordinar una evaluación. ¡Gracias!';
   return msg;
 }
 
-function checkAndShowWhatsApp() {
-  if (lead.nombre && lead.modelo && lead.servicio && lead.necesidad) {
-    // Mostrar CTA si no está ya visible
-    if (!document.getElementById('waCTA')) {
-      const wrap = document.getElementById('aiMessages');
-      const cta = document.createElement('div');
-      cta.id = 'waCTA';
-      cta.className = 'ai-wa-cta';
-      cta.innerHTML = `
-        <div class="ai-wa-cta-text">¡Listo! Tengo toda la info para pasarte con nuestro equipo 🔵</div>
-        <button class="ai-wa-btn" onclick="openWhatsApp()">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.9l6.204-1.449A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.006-1.374l-.36-.214-3.681.86.929-3.585-.235-.368A9.794 9.794 0 012.182 12C2.182 6.566 6.566 2.182 12 2.182S21.818 6.566 21.818 12 17.434 21.818 12 21.818z"/></svg>
-          Continuar por WhatsApp
-        </button>`;
-      wrap.appendChild(cta);
-      wrap.scrollTop = wrap.scrollHeight;
-    }
-  }
+function showWhatsAppBtn() {
+  if (waShown) return;
+  waShown = true;
+  const wrap = document.getElementById('aiMessages');
+  const cta = document.createElement('div');
+  cta.id = 'waCTA';
+  cta.className = 'ai-wa-cta';
+  cta.innerHTML = `
+    <div class="ai-wa-cta-text">¡Perfecto! Hacé clic para continuar con nuestro equipo y coordinar todo por WhatsApp 👇</div>
+    <button class="ai-wa-btn" onclick="openWhatsApp()">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.9l6.204-1.449A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.006-1.374l-.36-.214-3.681.86.929-3.585-.235-.368A9.794 9.794 0 012.182 12C2.182 6.566 6.566 2.182 12 2.182S21.818 6.566 21.818 12 17.434 21.818 12 21.818z"/></svg>
+      Continuar por WhatsApp
+    </button>`;
+  wrap.appendChild(cta);
+  wrap.scrollTop = wrap.scrollHeight;
 }
 
 function openWhatsApp() {
-  const msg = buildWhatsAppMsg();
-  window.open(`https://wa.me/56942600558?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open('https://wa.me/56942600558?text=' + encodeURIComponent(buildWhatsAppMsg()), '_blank');
 }
 
 async function callGroq(userMessage) {
   chatHistory.push({ role: 'user', content: userMessage });
-  extractLeadData(userMessage);
-
-  // Actualiza necesidad si no la tenemos
-  if (!lead.necesidad && userMessage.length > 15) {
-    lead.necesidad = userMessage.slice(0, 120);
-  }
-
   showTyping();
   isBotTyping = true;
 
-  // Delay humano mínimo
-  const minDelay = new Promise(r => setTimeout(r, 900 + Math.random() * 700));
+  const minDelay = new Promise(r => setTimeout(r, 900 + Math.random() * 600));
 
   try {
     const [res] = await Promise.all([
@@ -3856,13 +3889,18 @@ async function callGroq(userMessage) {
     if (!res.ok) throw new Error('API error ' + res.status);
 
     const data = await res.json();
-    const reply = data.reply || 'Lo siento, hubo un problema. Intenta de nuevo.';
+    const reply = data.reply || 'Lo siento, hubo un problema. Intentá de nuevo.';
+
+    // Merge lead data que viene del servidor
+    mergeLead(data.lead);
 
     chatHistory.push({ role: 'assistant', content: reply });
     addMsg(reply, 'bot');
 
-    // Extraer datos de la respuesta del bot también puede revelar contexto
-    checkAndShowWhatsApp();
+    // Mostrar botón si el servidor lo indicó O si tenemos info suficiente
+    if (data.showWhatsApp || data.readyForWA) {
+      showWhatsAppBtn();
+    }
 
   } catch (err) {
     removeTyping();
@@ -3897,6 +3935,41 @@ function sendAI() {
   addMsg(q, 'user');
   callGroq(q);
 }
+
+/* ============================================================
+   PROJECT CARDS — hover play & lightbox
+   ============================================================ */
+function projectHoverPlay(card) {
+  const v = card.querySelector('.project-video');
+  if (v && window.matchMedia('(hover: hover)').matches) v.play();
+}
+function projectHoverPause(card) {
+  const v = card.querySelector('.project-video');
+  if (v && window.matchMedia('(hover: hover)').matches) { v.pause(); v.currentTime = 0; }
+}
+
+function openLightbox(card) {
+  const src  = card.querySelector('.project-video').src;
+  const lb   = document.getElementById('videoLightbox');
+  const lbV  = document.getElementById('lightboxVideo');
+  lbV.src    = src;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  lbV.load();
+  lbV.play().catch(()=>{});
+}
+
+function closeLightbox() {
+  const lb  = document.getElementById('videoLightbox');
+  const lbV = document.getElementById('lightboxVideo');
+  lbV.pause();
+  lbV.src   = '';
+  lb.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close lightbox with Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 </body>
 </html>
